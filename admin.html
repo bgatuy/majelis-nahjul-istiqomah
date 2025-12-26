@@ -458,6 +458,9 @@
         }
 
         window.switchTab = function(tabName) {
+            // Simpan posisi tab terakhir ke LocalStorage
+            localStorage.setItem('activeTab', tabName);
+
             // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(el => {
                 el.classList.add('hidden');
@@ -494,6 +497,10 @@
                 document.getElementById('login-overlay').classList.add('hidden');
                 document.getElementById('dashboard-container').classList.remove('hidden');
                 document.getElementById('dashboard-container').classList.add('flex');
+                
+                // Buka tab terakhir yang disimpan (atau default ke home)
+                const lastTab = localStorage.getItem('activeTab') || 'home';
+                switchTab(lastTab);
             } else {
                 document.getElementById('login-overlay').classList.remove('hidden');
                 document.getElementById('dashboard-container').classList.add('hidden');

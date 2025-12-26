@@ -1,16 +1,15 @@
 {
   "name": "nahjul-istiqomah",
   "version": "1.0.0",
-  "description": "",
-  "main": "script.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
   "devDependencies": {
-    "tailwindcss": "^3.4.17"
+    "vite": "^5.0.0"
   }
 }

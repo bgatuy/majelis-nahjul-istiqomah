@@ -30,17 +30,17 @@
                     <i data-lucide="lock" class="text-amber-400 w-6 h-6"></i>
                 </div>
                 <h1 class="text-2xl font-bold text-emerald-950">Admin Login</h1>
-                <p class="text-slate-500 text-sm">Masukkan Username & Password untuk akses.</p>
+                <p class="text-slate-500 text-sm">Masukkan Email & Password untuk akses</p>
             </div>
             
             <form onsubmit="handleLogin(event)" class="space-y-5">
     <div class="space-y-4">
         <div>
             <input 
-                type="text" 
+                type="email" 
                 id="username" 
-                aria-label="Username" 
-                placeholder="Username" 
+                aria-label="Email" 
+                placeholder="Email" 
                 class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-lg">
         </div>
 
@@ -127,9 +127,9 @@
                                 <div class="text-sm text-amber-800">
                                     <strong>Catatan Penting:</strong>
                                     <ul class="list-disc list-inside mt-1 space-y-1">
-                                        <li>Perubahan data disimpan di <strong>Browser ini (LocalStorage)</strong>.</li>
-                                        <li>Jika Anda membuka website di perangkat lain, data mungkin tidak berubah (karena tidak ada server).</li>
-                                        <li>Gunakan fitur ini untuk keperluan presentasi atau display lokal.</li>
+                                        <li>Perubahan data disimpan langsung di <strong>Database (Cloud)</strong></li>
+                                        <li>Data akan otomatis muncul di website utama</li>
+                                        <li>Pastikan koneksi internet lancar saat menyimpan data</li>
                                     </ul>
                                 </div>
                             </div>
@@ -153,17 +153,10 @@
                     <form onsubmit="saveSchedule(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input type="hidden" id="sched-id">
                         <input type="text" id="sched-title" aria-label="Judul Kajian" placeholder="Judul Kajian (Contoh: Kajian Fiqih)" class="p-2 border rounded" required>
+                        <input type="text" id="sched-speaker" aria-label="Penceramah" placeholder="Nama Penceramah (Contoh: Ustadz Fulan)" class="p-2 border rounded" required>
+                        <input type="date" id="sched-date" aria-label="Tanggal" class="p-2 border rounded" required>
                         <input type="text" id="sched-time" aria-label="Waktu Kajian" placeholder="Waktu (Contoh: Ba'da Isya)" class="p-2 border rounded" required>
                         <input type="text" id="sched-loc" aria-label="Lokasi Kajian" placeholder="Lokasi" class="p-2 border rounded" required>
-                        <div class="flex gap-2">
-                            <input type="text" id="sched-dayTitle" aria-label="Label Waktu (Malam/Pagi)" placeholder="Label Hari (Malam/Pagi)" class="p-2 border rounded w-1/2" required>
-                            <input type="text" id="sched-dayName" aria-label="Nama Hari" placeholder="Nama Hari (Sabtu/Ahad)" class="p-2 border rounded w-1/2" required>
-                        </div>
-                        <select id="sched-color" aria-label="Warna Kartu" class="p-2 border rounded">
-                            <option value="emerald">Hijau (Emerald)</option>
-                            <option value="amber">Kuning (Amber)</option>
-                            <option value="slate">Abu-abu (Slate)</option>
-                        </select>
                         <button type="submit" class="bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700 font-bold md:col-span-2">Simpan Jadwal</button>
                     </form>
                 </div>
@@ -192,7 +185,7 @@
                         <div class="space-y-2 border border-dashed border-slate-300 p-4 rounded-lg bg-slate-50">
                             <label for="gal-file" class="block text-sm font-medium text-emerald-900">Upload Foto (Dari HP/Laptop)</label>
                             <input type="file" id="gal-file" accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-100 file:text-emerald-700 hover:file:bg-emerald-200 cursor-pointer" required>
-                            <p class="text-xs text-slate-500">* Maksimal 5 Foto. Usahakan ukuran kecil (< 500KB).</p>
+                            <p class="text-xs text-slate-500">* Maksimal 5 Foto. Usahakan ukuran kecil (&lt; 500KB).</p>
                         </div>
 
                         <button type="submit" class="bg-amber-500 text-white py-2 rounded hover:bg-amber-600 font-bold">Tambah Foto</button>
@@ -217,114 +210,158 @@
         </div>
     </div>
 
-    <!-- Load Script Utama untuk Akses Data -->
-    <script src="script.js"></script>
+    <script type="module">
+        import { createClient } from '@supabase/supabase-js'
 
-    <script>
+        // Inisialisasi Supabase
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
         lucide.createIcons();
 
-        // --- KONFIGURASI ADMIN ---
-        const ADMIN_USER = "admin";
-        const ADMIN_PASS = "123456"; 
+        // --- DATA FETCHING ---
 
-        // --- LOGIC ADMIN ---
-        
-        // Render List Jadwal
-        function renderAdminSchedule() {
+        // Load Jadwal dari Supabase
+        async function loadSchedules() {
             const container = document.getElementById('admin-schedule-list');
-            container.innerHTML = scheduleData.map((item, index) => `
-                <div class="bg-white p-4 rounded-lg border border-slate-200 flex justify-between items-center shadow-sm">
-                    <div class="min-w-0 flex-1 mr-4">
-                        <div class="font-bold text-emerald-900 truncate">${item.title}</div>
-                        <div class="text-sm text-slate-500 truncate">${item.dayName} (${item.dayTitle}) - ${item.time}</div>
-                    </div>
-                    <button onclick="deleteItem('schedule', ${index})" class="text-red-500 hover:bg-red-50 p-2 rounded shrink-0">
-                        <i data-lucide="trash-2" class="w-5 h-5"></i>
-                    </button>
-                </div>
-            `).join('');
-            lucide.createIcons();
-        }
+            container.innerHTML = '<p class="text-center text-slate-500">Memuat data...</p>';
 
-        // Render List Galeri
-        function renderAdminGallery() {
-            const container = document.getElementById('admin-gallery-list');
-            container.innerHTML = galleryData.map((item, index) => {
-                if(item.type === 'image') {
-                    return `
-                    <div class="relative group rounded-lg overflow-hidden aspect-square bg-slate-100">
-                        <img src="${item.src}" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onclick="deleteItem('gallery', ${index})" class="bg-red-500 text-white p-2 rounded-full">
-                                <i data-lucide="trash-2" class="w-5 h-5"></i>
-                            </button>
-                        </div>
-                        <div class="absolute bottom-0 w-full bg-black/50 text-white text-xs p-1 text-center truncate">${item.title}</div>
-                    </div>`;
-                } else {
-                    return `
-                    <div class="relative group rounded-lg overflow-hidden aspect-square bg-gradient-to-br from-${item.from} to-${item.to} flex items-center justify-center">
-                        <span class="font-bold text-${item.text}">${item.title}</span>
-                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onclick="deleteItem('gallery', ${index})" class="bg-red-500 text-white p-2 rounded-full">
-                                <i data-lucide="trash-2" class="w-5 h-5"></i>
-                            </button>
-                        </div>
-                    </div>`;
-                }
-            }).join('');
-            lucide.createIcons();
-        }
+            const { data, error } = await supabase
+                .from('schedules')
+                .select('*')
+                .order('date', { ascending: true });
 
-        // Save Schedule
-        function saveSchedule(e) {
-            e.preventDefault();
-            const color = document.getElementById('sched-color').value;
-            const newItem = {
-                dayTitle: document.getElementById('sched-dayTitle').value,
-                dayName: document.getElementById('sched-dayName').value,
-                dayIndex: null, // Simplified
-                title: document.getElementById('sched-title').value,
-                time: document.getElementById('sched-time').value,
-                location: document.getElementById('sched-loc').value,
-                color: color,
-                isWide: false
-            };
-            
-            scheduleData.push(newItem);
-            localStorage.setItem('mni_schedule', JSON.stringify(scheduleData));
-            renderAdminSchedule();
-            e.target.reset();
-            showModal('Berhasil', 'Jadwal berhasil disimpan!', 'success');
-        }
-
-        // Save Gallery
-        function saveGallery(e) {
-            e.preventDefault();
-            
-            // Cek jumlah foto saat ini (Maksimal 5)
-            const currentImages = galleryData.filter(item => item.type === 'image').length;
-            if (currentImages >= 5) {
-                showModal('Gagal', 'Batas maksimal 5 foto tercapai! Silakan hapus foto lama terlebih dahulu.', 'error');
+            if (error) {
+                container.innerHTML = '<p class="text-red-500">Gagal memuat data.</p>';
                 return;
             }
 
+            container.innerHTML = '';
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-slate-500">Belum ada jadwal.</p>';
+                return;
+            }
+
+            data.forEach(item => {
+                const dateStr = new Date(item.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                const div = document.createElement('div');
+                div.className = 'bg-white p-4 rounded-lg border border-slate-200 flex justify-between items-center shadow-sm';
+                div.innerHTML = `
+                    <div class="min-w-0 flex-1 mr-4">
+                        <div class="font-bold text-emerald-900 truncate">${item.title}</div>
+                        <div class="text-sm text-slate-500 truncate">${dateStr} - ${item.time}</div>
+                        <div class="text-xs text-slate-400 truncate">${item.speaker} | ${item.location}</div>
+                    </div>
+                    <button class="delete-btn text-red-500 hover:bg-red-50 p-2 rounded shrink-0" data-id="${item.id}" data-type="schedule">
+                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                    </button>
+                `;
+                container.appendChild(div);
+            });
+            
+            // Re-attach event listeners for delete buttons
+            container.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    deleteItem(this.dataset.type, this.dataset.id);
+                });
+            });
+            lucide.createIcons();
+        }
+
+        // Load Galeri dari Supabase
+        async function loadGallery() {
+            const container = document.getElementById('admin-gallery-list');
+            container.innerHTML = '<p class="text-center text-slate-500 col-span-full">Memuat foto...</p>';
+
+            const { data, error } = await supabase
+                .from('gallery')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                container.innerHTML = '<p class="text-red-500 col-span-full">Gagal memuat galeri.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-slate-500 col-span-full">Belum ada foto.</p>';
+                return;
+            }
+
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'relative group rounded-lg overflow-hidden aspect-square bg-slate-100';
+                div.innerHTML = `
+                    <img src="${item.image_url}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button class="delete-btn bg-red-500 text-white p-2 rounded-full" data-id="${item.id}" data-type="gallery">
+                            <i data-lucide="trash-2" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    <div class="absolute bottom-0 w-full bg-black/50 text-white text-xs p-1 text-center truncate">${item.caption || 'Tanpa Judul'}</div>
+                `;
+                container.appendChild(div);
+            });
+
+            container.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    deleteItem(this.dataset.type, this.dataset.id);
+                });
+            });
+            lucide.createIcons();
+        }
+
+        // --- ACTIONS ---
+
+        // Simpan Jadwal
+        window.saveSchedule = async function(e) {
+            e.preventDefault();
+            
+            const newItem = {
+                title: document.getElementById('sched-title').value,
+                speaker: document.getElementById('sched-speaker').value,
+                date: document.getElementById('sched-date').value,
+                time: document.getElementById('sched-time').value,
+                location: document.getElementById('sched-loc').value
+            };
+            
+            const { error } = await supabase.from('schedules').insert([newItem]);
+
+            if (error) {
+                console.error(error);
+                showModal('Gagal', 'Gagal menyimpan jadwal.', 'error');
+            } else {
+                showModal('Berhasil', 'Jadwal berhasil disimpan!', 'success');
+                e.target.reset();
+                loadSchedules();
+            }
+        }
+
+        // Simpan Galeri
+        window.saveGallery = function(e) {
+            e.preventDefault();
+            
             const title = document.getElementById('gal-title').value;
             const fileInput = document.getElementById('gal-file');
 
-            const processSave = (src) => {
+            const processSave = async (src) => {
                 const newItem = {
-                    type: 'image',
-                    src: src,
-                    title: title,
-                    icon: 'image',
-                    isLarge: false
+                    image_url: src, // Menyimpan Base64 langsung ke text column (Simple setup)
+                    caption: title
                 };
-                galleryData.push(newItem);
-                localStorage.setItem('mni_gallery', JSON.stringify(galleryData));
-                renderAdminGallery();
-                e.target.reset();
-                showModal('Berhasil', 'Foto berhasil ditambahkan!', 'success');
+                
+                const { error } = await supabase.from('gallery').insert([newItem]);
+
+                if (error) {
+                    console.error(error);
+                    showModal('Gagal', 'Gagal mengupload foto.', 'error');
+                } else {
+                    showModal('Berhasil', 'Foto berhasil ditambahkan!', 'success');
+                    e.target.reset();
+                    loadGallery();
+                }
             };
             
             if (fileInput.files && fileInput.files[0]) {
@@ -336,7 +373,7 @@
                     reader.readAsDataURL(file);
                 };
 
-                if (file.size > 500 * 1024) {
+                if (file.size > 500 * 1024) { // Warning jika > 500KB
                     showModal('Ukuran Besar', 'Ukuran foto cukup besar (>500KB). Ini bisa membuat penyimpanan browser cepat penuh. Yakin ingin lanjut?', 'warning', processFile);
                 } else {
                     processFile();
@@ -346,38 +383,48 @@
             }
         }
 
-        // Delete Item
-        function deleteItem(type, index) {
-            showModal('Konfirmasi Hapus', 'Yakin ingin menghapus item ini?', 'warning', () => {
-                if(type === 'schedule') {
-                    scheduleData.splice(index, 1);
-                    localStorage.setItem('mni_schedule', JSON.stringify(scheduleData));
-                    renderAdminSchedule();
+        // Hapus Item
+        window.deleteItem = function(type, id) {
+            showModal('Konfirmasi Hapus', 'Yakin ingin menghapus item ini?', 'warning', async () => {
+                let table = type === 'schedule' ? 'schedules' : 'gallery';
+                
+                const { error } = await supabase.from(table).delete().eq('id', id);
+
+                if (error) {
+                    showModal('Gagal', 'Gagal menghapus data.', 'error');
                 } else {
-                    galleryData.splice(index, 1);
-                    localStorage.setItem('mni_gallery', JSON.stringify(galleryData));
-                    renderAdminGallery();
+                if(type === 'schedule') {
+                    loadSchedules();
+                } else {
+                    loadGallery();
+                }
                 }
             });
         }
 
-        // Reset Data
-        function resetData(type) {
-            showModal('Konfirmasi Reset', 'Data akan kembali ke pengaturan awal (bawaan). Lanjutkan?', 'warning', () => {
-                if(type === 'schedule') {
-                    localStorage.removeItem('mni_schedule');
-                    scheduleData = [...defaultScheduleData];
-                    renderAdminSchedule();
+        // Reset Data (Hapus Semua)
+        window.resetData = function(type) {
+            const label = type === 'schedule' ? 'Jadwal' : 'Galeri';
+            showModal('Hapus Semua Data?', `PERINGATAN: Tindakan ini akan menghapus SELURUH data ${label} dari database. Data yang dihapus tidak bisa dikembalikan. Lanjutkan?`, 'warning', async () => {
+                const table = type === 'schedule' ? 'schedules' : 'gallery';
+                
+                // Menghapus semua data dengan filter ID > 0 (asumsi ID auto-increment)
+                const { error } = await supabase.from(table).delete().gt('id', 0);
+
+                if (error) {
+                    console.error('Reset error:', error);
+                    showModal('Gagal', `Gagal mereset data ${label}.`, 'error');
                 } else {
-                    localStorage.removeItem('mni_gallery');
-                    galleryData = [...defaultGalleryData];
-                    renderAdminGallery();
+                    showModal('Berhasil', `Semua data ${label} berhasil dihapus.`, 'success');
+                    if (type === 'schedule') loadSchedules();
+                    else loadGallery();
                 }
-                showModal('Berhasil', 'Data berhasil direset!', 'success');
             });
         }
 
-        function togglePasswordVisibility() {
+        // --- UI UTILS ---
+
+        window.togglePasswordVisibility = function() {
             const passwordInput = document.getElementById('password');
             const eyeIcon = document.getElementById('eye-icon');
             
@@ -391,25 +438,26 @@
             lucide.createIcons();
         }
 
-        function handleLogin(e) {
+        window.handleLogin = async function(e) {
             e.preventDefault();
-            const userInput = document.getElementById('username').value;
-            const passInput = document.getElementById('password').value;
+            const email = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
             const errorMsg = document.getElementById('error-msg');
             
-            if (userInput === ADMIN_USER && passInput === ADMIN_PASS) {
-                document.getElementById('login-overlay').classList.add('hidden');
-                document.getElementById('dashboard-container').classList.remove('hidden');
-                document.getElementById('dashboard-container').classList.add('flex');
-                localStorage.setItem('isAdminLoggedIn', 'true');
-            } else {
+            errorMsg.classList.add('hidden');
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
                 errorMsg.classList.remove('hidden');
-                document.getElementById('password').value = '';
-                document.getElementById('password').focus();
+                errorMsg.textContent = 'Login Gagal: ' + error.message;
             }
         }
 
-        function switchTab(tabName) {
+        window.switchTab = function(tabName) {
             // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(el => {
                 el.classList.add('hidden');
@@ -430,20 +478,75 @@
                 document.getElementById('nav-' + tabName).classList.add('bg-emerald-900', 'text-white');
                 
                 // Render content when tab opens
-                if(tabName === 'jadwal') renderAdminSchedule();
-                if(tabName === 'galeri') renderAdminGallery();
+                if(tabName === 'jadwal') loadSchedules();
+                if(tabName === 'galeri') loadGallery();
             }
         }
 
-        function logout() {
-            localStorage.removeItem('isAdminLoggedIn');
-            location.reload();
+        window.logout = async function() {
+            await supabase.auth.signOut();
+            // UI update handled by onAuthStateChange
         }
 
-        if (localStorage.getItem('isAdminLoggedIn') === 'true') {
-            document.getElementById('login-overlay').classList.add('hidden');
-            document.getElementById('dashboard-container').classList.remove('hidden');
-            document.getElementById('dashboard-container').classList.add('flex');
+        // Listen to Auth State Changes
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                document.getElementById('login-overlay').classList.add('hidden');
+                document.getElementById('dashboard-container').classList.remove('hidden');
+                document.getElementById('dashboard-container').classList.add('flex');
+            } else {
+                document.getElementById('login-overlay').classList.remove('hidden');
+                document.getElementById('dashboard-container').classList.add('hidden');
+                document.getElementById('dashboard-container').classList.remove('flex');
+            }
+        });
+
+        // Modal Helper (Global)
+        window.showModal = function(title, message, iconType, onConfirm) {
+            const modal = document.getElementById('custom-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const modalIcon = document.getElementById('modal-icon');
+            const modalActions = document.getElementById('modal-actions');
+            
+            if (!modal) return;
+
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            
+            modalActions.innerHTML = '';
+            
+            if (iconType === 'warning' && onConfirm) {
+                modalIcon.innerHTML = '<i data-lucide="alert-triangle" class="w-6 h-6"></i>';
+                const confirmBtn = document.createElement('button');
+                confirmBtn.className = 'bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700';
+                confirmBtn.textContent = 'Ya, Lanjutkan';
+                confirmBtn.onclick = () => {
+                    onConfirm();
+                    modal.classList.add('hidden');
+                };
+                modalActions.appendChild(confirmBtn);
+                
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'bg-slate-200 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-300';
+                cancelBtn.textContent = 'Batal';
+                cancelBtn.onclick = () => modal.classList.add('hidden');
+                modalActions.appendChild(cancelBtn);
+            } else {
+                if (iconType === 'success') modalIcon.innerHTML = '<i data-lucide="check" class="w-6 h-6"></i>';
+                else modalIcon.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
+                
+                const okBtn = document.createElement('button');
+                okBtn.className = 'bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700';
+                okBtn.textContent = 'Tutup';
+                okBtn.onclick = () => modal.classList.add('hidden');
+                modalActions.appendChild(okBtn);
+            }
+            lucide.createIcons();
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
         }
     </script>
 </body>

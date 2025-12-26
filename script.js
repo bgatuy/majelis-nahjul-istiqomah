@@ -10,6 +10,7 @@ const mobileMenuBtn = document.getElementById('mobile-menu-btn');
 const mobileMenu = document.getElementById('mobile-menu');
 const scheduleContainer = document.getElementById('schedule-container');
 const galleryContainer = document.getElementById('gallery-container');
+const navbar = document.getElementById('navbar');
 
 // --- Event Listeners & UI Logic ---
 
@@ -17,6 +18,19 @@ const galleryContainer = document.getElementById('gallery-container');
 if (mobileMenuBtn && mobileMenu) {
     mobileMenuBtn.addEventListener('click', () => {
         mobileMenu.classList.toggle('hidden');
+    });
+}
+
+// Navbar Scroll Effect
+if (navbar) {
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('glass-nav', 'py-3');
+            navbar.classList.remove('py-5');
+        } else {
+            navbar.classList.remove('glass-nav', 'py-3');
+            navbar.classList.add('py-5');
+        }
     });
 }
 

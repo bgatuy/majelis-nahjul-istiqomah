@@ -1,0 +1,406 @@
+<!-- d:\nahjul istiqomah\admin.html -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Nahjul Istiqomah</title>
+    <meta name="robots" content="noindex, nofollow"> <!-- Agar tidak muncul di Google -->
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <link href="./dist/output.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        @media (max-width: 768px) {
+            html { font-size: 90%; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 h-screen overflow-hidden font-sans">
+
+    <!-- 1. LOGIN OVERLAY -->
+    <div id="login-overlay" class="fixed inset-0 z-50 bg-slate-100 flex items-center justify-center p-4">
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-200">
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-emerald-900 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                    <i data-lucide="lock" class="text-amber-400 w-6 h-6"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-emerald-950">Admin Login</h1>
+                <p class="text-slate-500 text-sm">Masukkan PIN keamanan untuk akses.</p>
+            </div>
+            
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <input type="password" id="password" aria-label="PIN Admin" placeholder="Masukkan PIN..." class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-center tracking-widest text-lg">
+                </div>
+                <button type="submit" class="w-full bg-emerald-900 hover:bg-emerald-800 text-white font-bold py-3 rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                    Masuk Dashboard
+                </button>
+                <p id="error-msg" class="text-red-500 text-sm text-center hidden">PIN Salah! Silakan coba lagi.</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. DASHBOARD LAYOUT (Hidden by default) -->
+    <div id="dashboard-container" class="h-screen hidden flex-col md:flex-row">
+        <!-- SIDEBAR -->
+        <aside class="w-full md:w-20 bg-emerald-950 text-emerald-100 flex flex-row md:flex-col shadow-2xl z-20 shrink-0">
+            <div class="p-4 md:p-4 border-r md:border-r-0 md:border-b border-emerald-900 flex items-center justify-center gap-3 shrink-0">
+                <img src="favicon.png" alt="Logo" class="w-8 h-8 md:w-10 md:h-10 object-contain drop-shadow-md">
+            </div>
+            
+            <nav class="flex-1 p-2 md:p-4 space-x-2 md:space-x-0 md:space-y-2 flex flex-row md:flex-col overflow-x-auto md:overflow-visible items-center md:items-stretch">
+                <button onclick="switchTab('home')" class="nav-item w-auto md:w-full flex items-center justify-center gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-3 rounded-lg hover:bg-emerald-900 transition-colors text-left bg-emerald-900 text-white whitespace-nowrap" id="nav-home" title="Beranda">
+                    <i data-lucide="home" class="w-5 h-5"></i>
+                </button>
+                <button onclick="switchTab('jadwal')" class="nav-item w-auto md:w-full flex items-center justify-center gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-3 rounded-lg hover:bg-emerald-900 transition-colors text-left whitespace-nowrap" id="nav-jadwal" title="Edit Jadwal">
+                    <i data-lucide="calendar" class="w-5 h-5"></i>
+                </button>
+                <button onclick="switchTab('galeri')" class="nav-item w-auto md:w-full flex items-center justify-center gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-3 rounded-lg hover:bg-emerald-900 transition-colors text-left whitespace-nowrap" id="nav-galeri" title="Edit Galeri">
+                    <i data-lucide="image" class="w-5 h-5"></i>
+                </button>
+                
+                <a href="index.html" target="_blank" class="md:hidden w-auto flex items-center justify-center gap-2 px-3 py-2 rounded-lg hover:bg-emerald-900 transition-colors text-emerald-100 whitespace-nowrap" title="Lihat Website">
+                    <i data-lucide="external-link" class="w-5 h-5"></i>
+                </a>
+                
+                <div class="hidden md:block pt-4 mt-4 border-t border-emerald-900">
+                    <a href="index.html" target="_blank" class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg hover:bg-emerald-900 text-emerald-400 hover:text-white transition-colors" title="Lihat Website">
+                        <i data-lucide="external-link" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="p-2 md:p-4 border-l md:border-l-0 md:border-t border-emerald-900 shrink-0 flex items-center justify-center">
+                <button onclick="logout()" class="w-full flex items-center gap-2 justify-center px-3 md:px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm font-bold" title="Keluar">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 flex flex-col relative bg-slate-200">
+            <!-- Tab: Home -->
+            <div id="content-home" class="tab-content p-4 md:p-8 overflow-y-auto h-full">
+                <div class="max-w-3xl mx-auto">
+                    <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200 mb-6">
+                        <h2 class="text-2xl font-bold text-emerald-950 mb-4">Selamat Datang, Admin!</h2>
+                        <p class="text-slate-600 mb-6">
+                            Gunakan menu di sebelah kiri untuk mengelola konten website. Perubahan yang Anda lakukan di sini akan otomatis tersinkronisasi ke website utama.
+                        </p>
+                        
+                        <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
+                            <div class="flex items-start gap-3">
+                                <i data-lucide="info" class="text-amber-600 w-5 h-5 mt-0.5"></i>
+                                <div class="text-sm text-amber-800">
+                                    <strong>Catatan Penting:</strong>
+                                    <ul class="list-disc list-inside mt-1 space-y-1">
+                                        <li>Perubahan data disimpan di <strong>Browser ini (LocalStorage)</strong>.</li>
+                                        <li>Jika Anda membuka website di perangkat lain, data mungkin tidak berubah (karena tidak ada server).</li>
+                                        <li>Gunakan fitur ini untuk keperluan presentasi atau display lokal.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Jadwal Manager -->
+            <div id="content-jadwal" class="tab-content hidden h-full flex-col p-4 md:p-6 overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-emerald-950">Kelola Jadwal</h2>
+                    <button onclick="resetData('schedule')" class="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors text-sm font-bold border border-red-200 shadow-sm hover:shadow-md" title="Hapus Semua Jadwal">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i> <span class="hidden sm:inline">Reset Data</span>
+                    </button>
+                </div>
+
+                <!-- Form Tambah Jadwal -->
+                <div class="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-slate-200 mb-8">
+                    <h3 class="font-bold text-lg mb-4 text-emerald-800">Tambah / Edit Jadwal</h3>
+                    <form onsubmit="saveSchedule(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="hidden" id="sched-id">
+                        <input type="text" id="sched-title" aria-label="Judul Kajian" placeholder="Judul Kajian (Contoh: Kajian Fiqih)" class="p-2 border rounded" required>
+                        <input type="text" id="sched-time" aria-label="Waktu Kajian" placeholder="Waktu (Contoh: Ba'da Isya)" class="p-2 border rounded" required>
+                        <input type="text" id="sched-loc" aria-label="Lokasi Kajian" placeholder="Lokasi" class="p-2 border rounded" required>
+                        <div class="flex gap-2">
+                            <input type="text" id="sched-dayTitle" aria-label="Label Waktu (Malam/Pagi)" placeholder="Label Hari (Malam/Pagi)" class="p-2 border rounded w-1/2" required>
+                            <input type="text" id="sched-dayName" aria-label="Nama Hari" placeholder="Nama Hari (Sabtu/Ahad)" class="p-2 border rounded w-1/2" required>
+                        </div>
+                        <select id="sched-color" aria-label="Warna Kartu" class="p-2 border rounded">
+                            <option value="emerald">Hijau (Emerald)</option>
+                            <option value="amber">Kuning (Amber)</option>
+                            <option value="slate">Abu-abu (Slate)</option>
+                        </select>
+                        <button type="submit" class="bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700 font-bold md:col-span-2">Simpan Jadwal</button>
+                    </form>
+                </div>
+
+                <!-- List Jadwal -->
+                <div id="admin-schedule-list" class="grid gap-4">
+                    <!-- JS will populate this -->
+                </div>
+            </div>
+
+            <!-- Tab: Galeri Manager -->
+            <div id="content-galeri" class="tab-content hidden h-full flex-col p-4 md:p-6 overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-emerald-950">Kelola Galeri</h2>
+                    <button onclick="resetData('gallery')" class="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors text-sm font-bold border border-red-200 shadow-sm hover:shadow-md" title="Hapus Semua Foto">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i> <span class="hidden sm:inline">Reset Data</span>
+                    </button>
+                </div>
+
+                <!-- Form Tambah Foto -->
+                <div class="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-slate-200 mb-8">
+                    <h3 class="font-bold text-lg mb-4 text-emerald-800">Tambah Foto Baru</h3>
+                    <form onsubmit="saveGallery(event)" class="grid grid-cols-1 gap-4">
+                        <input type="text" id="gal-title" aria-label="Judul Foto" placeholder="Judul Foto" class="p-2 border rounded" required>
+                        
+                        <div class="space-y-2 border border-dashed border-slate-300 p-4 rounded-lg bg-slate-50">
+                            <label for="gal-file" class="block text-sm font-medium text-emerald-900">Upload Foto (Dari HP/Laptop)</label>
+                            <input type="file" id="gal-file" accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-100 file:text-emerald-700 hover:file:bg-emerald-200 cursor-pointer" required>
+                            <p class="text-xs text-slate-500">* Maksimal 5 Foto. Usahakan ukuran kecil (< 500KB).</p>
+                        </div>
+
+                        <button type="submit" class="bg-amber-500 text-white py-2 rounded hover:bg-amber-600 font-bold">Tambah Foto</button>
+                    </form>
+                </div>
+
+                <!-- Grid Galeri -->
+                <div id="admin-gallery-list" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- JS will populate this -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom Modal Notification -->
+    <div id="custom-modal" class="fixed inset-0 z-[60] bg-black/50 hidden items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-200 opacity-0">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full transform transition-all duration-200 scale-95 p-6 text-center" id="modal-content">
+            <div id="modal-icon" class="mx-auto w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mb-4 text-emerald-600"></div>
+            <h3 id="modal-title" class="text-lg font-bold text-slate-900 mb-2"></h3>
+            <p id="modal-message" class="text-slate-600 mb-6 text-sm leading-relaxed"></p>
+            <div id="modal-actions" class="flex gap-3 justify-center"></div>
+        </div>
+    </div>
+
+    <!-- Load Script Utama untuk Akses Data -->
+    <script src="script.js"></script>
+
+    <script>
+        lucide.createIcons();
+
+        // --- KONFIGURASI ADMIN ---
+        const ADMIN_PIN = "123456"; 
+
+        // --- LOGIC ADMIN ---
+        
+        // Render List Jadwal
+        function renderAdminSchedule() {
+            const container = document.getElementById('admin-schedule-list');
+            container.innerHTML = scheduleData.map((item, index) => `
+                <div class="bg-white p-4 rounded-lg border border-slate-200 flex justify-between items-center shadow-sm">
+                    <div class="min-w-0 flex-1 mr-4">
+                        <div class="font-bold text-emerald-900 truncate">${item.title}</div>
+                        <div class="text-sm text-slate-500 truncate">${item.dayName} (${item.dayTitle}) - ${item.time}</div>
+                    </div>
+                    <button onclick="deleteItem('schedule', ${index})" class="text-red-500 hover:bg-red-50 p-2 rounded shrink-0">
+                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // Render List Galeri
+        function renderAdminGallery() {
+            const container = document.getElementById('admin-gallery-list');
+            container.innerHTML = galleryData.map((item, index) => {
+                if(item.type === 'image') {
+                    return `
+                    <div class="relative group rounded-lg overflow-hidden aspect-square bg-slate-100">
+                        <img src="${item.src}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onclick="deleteItem('gallery', ${index})" class="bg-red-500 text-white p-2 rounded-full">
+                                <i data-lucide="trash-2" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                        <div class="absolute bottom-0 w-full bg-black/50 text-white text-xs p-1 text-center truncate">${item.title}</div>
+                    </div>`;
+                } else {
+                    return `
+                    <div class="relative group rounded-lg overflow-hidden aspect-square bg-gradient-to-br from-${item.from} to-${item.to} flex items-center justify-center">
+                        <span class="font-bold text-${item.text}">${item.title}</span>
+                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onclick="deleteItem('gallery', ${index})" class="bg-red-500 text-white p-2 rounded-full">
+                                <i data-lucide="trash-2" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>`;
+                }
+            }).join('');
+            lucide.createIcons();
+        }
+
+        // Save Schedule
+        function saveSchedule(e) {
+            e.preventDefault();
+            const color = document.getElementById('sched-color').value;
+            const newItem = {
+                dayTitle: document.getElementById('sched-dayTitle').value,
+                dayName: document.getElementById('sched-dayName').value,
+                dayIndex: null, // Simplified
+                title: document.getElementById('sched-title').value,
+                time: document.getElementById('sched-time').value,
+                location: document.getElementById('sched-loc').value,
+                color: color,
+                isWide: false
+            };
+            
+            scheduleData.push(newItem);
+            localStorage.setItem('mni_schedule', JSON.stringify(scheduleData));
+            renderAdminSchedule();
+            e.target.reset();
+            showModal('Berhasil', 'Jadwal berhasil disimpan!', 'success');
+        }
+
+        // Save Gallery
+        function saveGallery(e) {
+            e.preventDefault();
+            
+            // Cek jumlah foto saat ini (Maksimal 5)
+            const currentImages = galleryData.filter(item => item.type === 'image').length;
+            if (currentImages >= 5) {
+                showModal('Gagal', 'Batas maksimal 5 foto tercapai! Silakan hapus foto lama terlebih dahulu.', 'error');
+                return;
+            }
+
+            const title = document.getElementById('gal-title').value;
+            const fileInput = document.getElementById('gal-file');
+
+            const processSave = (src) => {
+                const newItem = {
+                    type: 'image',
+                    src: src,
+                    title: title,
+                    icon: 'image',
+                    isLarge: false
+                };
+                galleryData.push(newItem);
+                localStorage.setItem('mni_gallery', JSON.stringify(galleryData));
+                renderAdminGallery();
+                e.target.reset();
+                showModal('Berhasil', 'Foto berhasil ditambahkan!', 'success');
+            };
+            
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                
+                const processFile = () => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => processSave(e.target.result);
+                    reader.readAsDataURL(file);
+                };
+
+                if (file.size > 500 * 1024) {
+                    showModal('Ukuran Besar', 'Ukuran foto cukup besar (>500KB). Ini bisa membuat penyimpanan browser cepat penuh. Yakin ingin lanjut?', 'warning', processFile);
+                } else {
+                    processFile();
+                }
+            } else {
+                showModal('Peringatan', 'Harap pilih file foto!', 'warning');
+            }
+        }
+
+        // Delete Item
+        function deleteItem(type, index) {
+            showModal('Konfirmasi Hapus', 'Yakin ingin menghapus item ini?', 'warning', () => {
+                if(type === 'schedule') {
+                    scheduleData.splice(index, 1);
+                    localStorage.setItem('mni_schedule', JSON.stringify(scheduleData));
+                    renderAdminSchedule();
+                } else {
+                    galleryData.splice(index, 1);
+                    localStorage.setItem('mni_gallery', JSON.stringify(galleryData));
+                    renderAdminGallery();
+                }
+            });
+        }
+
+        // Reset Data
+        function resetData(type) {
+            showModal('Konfirmasi Reset', 'Data akan kembali ke pengaturan awal (bawaan). Lanjutkan?', 'warning', () => {
+                if(type === 'schedule') {
+                    localStorage.removeItem('mni_schedule');
+                    scheduleData = [...defaultScheduleData];
+                    renderAdminSchedule();
+                } else {
+                    localStorage.removeItem('mni_gallery');
+                    galleryData = [...defaultGalleryData];
+                    renderAdminGallery();
+                }
+                showModal('Berhasil', 'Data berhasil direset!', 'success');
+            });
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const input = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+            
+            if (input === ADMIN_PIN) {
+                document.getElementById('login-overlay').classList.add('hidden');
+                document.getElementById('dashboard-container').classList.remove('hidden');
+                document.getElementById('dashboard-container').classList.add('flex');
+                localStorage.setItem('isAdminLoggedIn', 'true');
+            } else {
+                errorMsg.classList.remove('hidden');
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+            }
+        }
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            });
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-emerald-900', 'text-white');
+                el.classList.add('text-emerald-100');
+            });
+
+            // Show selected tab
+            if (tabName === 'home') {
+                document.getElementById('content-home').classList.remove('hidden');
+                document.getElementById('nav-home').classList.add('bg-emerald-900', 'text-white');
+            } else {
+                document.getElementById('content-' + tabName).classList.remove('hidden');
+                document.getElementById('content-' + tabName).classList.add('flex');
+                document.getElementById('nav-' + tabName).classList.add('bg-emerald-900', 'text-white');
+                
+                // Render content when tab opens
+                if(tabName === 'jadwal') renderAdminSchedule();
+                if(tabName === 'galeri') renderAdminGallery();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('isAdminLoggedIn');
+            location.reload();
+        }
+
+        if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+            document.getElementById('login-overlay').classList.add('hidden');
+            document.getElementById('dashboard-container').classList.remove('hidden');
+            document.getElementById('dashboard-container').classList.add('flex');
+        }
+    </script>
+</body>
+</html>

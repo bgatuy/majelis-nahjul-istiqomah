@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Majelis Nahjul Istiqomah</title>
+    <meta name="description" content="Majelis Nahjul Istiqomah - Meniti Jalan Kebenaran & Istiqomah. Bergabunglah dalam kajian rutin, sholawat, dan mempererat ukhuwah islamiyah.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <!-- Tailwind CSS (Generated) -->
+    <link href="./dist/output.css" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @media (max-width: 768px) {
+            html { font-size: 90%; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-amber-400 selection:text-emerald-900 overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <!-- Logo Area -->
+            <a href="#home" class="flex items-center space-x-3 cursor-pointer">
+                <img src="favicon.png" alt="Logo" class="w-10 h-10 object-contain drop-shadow-md">
+                <div id="nav-logo-text" class="font-bold text-xl tracking-wide text-white drop-shadow-md">
+                    NAHJUL <span class="text-amber-400">ISTIQOMAH</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="nav-link font-medium text-white hover:text-amber-400 transition-colors duration-300">Beranda</a>
+                <a href="#about" class="nav-link font-medium text-white hover:text-amber-400 transition-colors duration-300">Tentang</a>
+                <a href="#schedule" class="nav-link font-medium text-white hover:text-amber-400 transition-colors duration-300">Jadwal</a>
+                <a href="#gallery" class="nav-link font-medium text-white hover:text-amber-400 transition-colors duration-300">Galeri</a>
+                <a href="#contact" class="nav-link font-medium text-white hover:text-amber-400 transition-colors duration-300">Kontak</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="text-white hover:text-amber-400 transition" aria-label="Menu">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-gradient-to-b from-emerald-900 to-emerald-950 shadow-xl border-t border-emerald-800/50">
+            <div class="flex flex-col px-4 py-4 space-y-2">
+                <a href="#home" class="mobile-link text-white font-medium hover:text-amber-400 py-3 border-b border-emerald-800/50">Beranda</a>
+                <a href="#about" class="mobile-link text-white font-medium hover:text-amber-400 py-3 border-b border-emerald-800/50">Tentang</a>
+                <a href="#schedule" class="mobile-link text-white font-medium hover:text-amber-400 py-3 border-b border-emerald-800/50">Jadwal</a>
+                <a href="#gallery" class="mobile-link text-white font-medium hover:text-amber-400 py-3 border-b border-emerald-800/50">Galeri</a>
+                <a href="#contact" class="mobile-link text-white font-medium hover:text-amber-400 py-3">Kontak</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-teal-900">
+        
+        <!-- Animated Background Effects -->
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, #fbbf24 1px, transparent 0); background-size: 40px 40px;"></div>
+        </div>
+        
+        <!-- Gradient Blobs -->
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-emerald-500 rounded-full blur-[100px] opacity-20 animate-pulse"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-teal-500 rounded-full blur-[100px] opacity-20"></div>
+
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-20">
+            <div class="inline-flex items-center gap-2 px-4 py-2 mb-8 border border-amber-400/30 rounded-full bg-emerald-900/40 backdrop-blur-md shadow-lg">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                <span class="text-amber-300 text-sm font-semibold tracking-wider uppercase">Majelis Ta'lim & Sholawat</span>
+            </div>
+            
+            <h1 class="text-4xl md:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-2xl">
+                Meniti Jalan <br/>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-600">
+                    Kebenaran & Istiqomah
+                </span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-emerald-100/90 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
+                Bergabunglah bersama kami dalam mempererat ukhuwah, memperdalam ilmu agama, dan melantunkan sholawat kepada Nabi Muhammad SAW.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#schedule" 
+                   class="group px-8 py-4 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-emerald-950 font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] flex items-center justify-center gap-2 transform hover:-translate-y-1">
+                    <i data-lucide="calendar" class="w-5 h-5"></i>
+                    Lihat Jadwal
+                </a>
+                <a href="#contact" 
+                   class="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/20 text-white font-medium rounded-xl backdrop-blur-sm transition-all flex items-center justify-center gap-2 hover:border-amber-400/50">
+                    Hubungi Kami
+                    <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Scroll Down Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-emerald-300/50">
+            <i data-lucide="arrow-down" class="w-6 h-6"></i>
+        </div>
+    </section>
+
+    <!-- About / Values Section -->
+    <section id="about" class="py-24 bg-white relative">
+        <div class="absolute top-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-200 to-transparent"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold text-emerald-950 mb-4">Nilai Utama Kami</h2>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-emerald-400 to-amber-400 mx-auto rounded-full"></div>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto text-lg">
+                    Majelis Nahjul Istiqomah berdiri di atas pondasi kecintaan kepada Allah dan Rasul-Nya.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="group p-8 bg-slate-50 rounded-2xl border border-slate-100 hover:border-emerald-200 hover:bg-gradient-to-b hover:from-white hover:to-emerald-50 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-100 rounded-full -mr-16 -mt-16 opacity-0 group-hover:opacity-50 transition-opacity"></div>
+                    
+                    <div class="w-16 h-16 bg-white rounded-2xl shadow-sm border border-emerald-100 flex items-center justify-center text-emerald-600 mb-6 group-hover:bg-gradient-to-br group-hover:from-emerald-600 group-hover:to-teal-600 group-hover:text-white transition-all duration-300">
+                        <i data-lucide="book-open" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-emerald-950 mb-3 group-hover:text-emerald-700">Keilmuan</h3>
+                    <p class="text-slate-600 leading-relaxed group-hover:text-slate-700">
+                        Mengkaji kitab-kitab klasik dan kontemporer dengan sanad keilmuan yang jelas dan bersambung.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="group p-8 bg-slate-50 rounded-2xl border border-slate-100 hover:border-emerald-200 hover:bg-gradient-to-b hover:from-white hover:to-emerald-50 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-100 rounded-full -mr-16 -mt-16 opacity-0 group-hover:opacity-50 transition-opacity"></div>
+
+                    <div class="w-16 h-16 bg-white rounded-2xl shadow-sm border border-emerald-100 flex items-center justify-center text-emerald-600 mb-6 group-hover:bg-gradient-to-br group-hover:from-emerald-600 group-hover:to-teal-600 group-hover:text-white transition-all duration-300">
+                        <i data-lucide="heart" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-emerald-950 mb-3 group-hover:text-emerald-700">Akhlaqul Karimah</h3>
+                    <p class="text-slate-600 leading-relaxed group-hover:text-slate-700">
+                        Membentuk pribadi yang santun, rendah hati, dan beradab sesuai tuntunan Nabi Muhammad SAW.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="group p-8 bg-slate-50 rounded-2xl border border-slate-100 hover:border-emerald-200 hover:bg-gradient-to-b hover:from-white hover:to-emerald-50 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-100 rounded-full -mr-16 -mt-16 opacity-0 group-hover:opacity-50 transition-opacity"></div>
+
+                    <div class="w-16 h-16 bg-white rounded-2xl shadow-sm border border-emerald-100 flex items-center justify-center text-emerald-600 mb-6 group-hover:bg-gradient-to-br group-hover:from-emerald-600 group-hover:to-teal-600 group-hover:text-white transition-all duration-300">
+                        <i data-lucide="users" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-emerald-950 mb-3 group-hover:text-emerald-700">Ukhuwah Islamiyah</h3>
+                    <p class="text-slate-600 leading-relaxed group-hover:text-slate-700">
+                        Mempererat tali persaudaraan antar sesama muslim tanpa memandang latar belakang sosial.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Schedule Section -->
+    <section id="schedule" class="py-24 bg-gradient-to-br from-emerald-50 via-slate-50 to-teal-50 relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-white to-transparent"></div>
+        <div class="absolute right-0 bottom-0 opacity-5 pointer-events-none">
+             <i data-lucide="calendar" class="w-96 h-96 -mr-24 -mb-24"></i>
+        </div>
+        
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-3xl md:text-5xl font-bold text-emerald-950">Jadwal Kajian Rutin</h2>
+                    <p class="mt-2 text-slate-600 text-lg">Mari istiqomah hadir di taman-taman surga.</p>
+                </div>
+            </div>
+
+            <!-- Container Jadwal (Diisi oleh JavaScript) -->
+            <div id="schedule-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-5xl font-bold text-emerald-950">Dokumentasi Kegiatan</h2>
+                <p class="mt-4 text-slate-600 text-lg">Momen kebersamaan dalam ketaatan.</p>
+            </div>
+            
+            <!-- Container Galeri (Diisi oleh JavaScript) -->
+            <div id="gallery-container" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3"></div>
+        </div>
+    </section>
+
+    <!-- CTA / Quote Section -->
+    <section class="py-24 bg-gradient-to-br from-emerald-900 to-emerald-950 relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-10" style="background-image: repeating-linear-gradient(45deg, #059669 0, #059669 1px, transparent 0, transparent 50%); background-size: 10px 10px;"></div>
+        <div class="absolute top-0 right-0 p-12 opacity-5 animate-pulse">
+           <i data-lucide="book-open" class="w-96 h-96"></i>
+        </div>
+
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <h2 class="text-3xl md:text-5xl font-serif italic text-amber-100 mb-8 leading-relaxed">
+                "Sebaik-baik amalan adalah yang paling konsisten (istiqomah) meskipun sedikit."
+            </h2>
+            <p class="text-emerald-300 text-lg font-medium">- HR. Bukhari & Muslim</p>
+            
+            <div class="mt-12 p-8 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 max-w-xl mx-auto hover:bg-white/10 transition-colors duration-300 shadow-2xl">
+                <h3 class="text-xl font-bold text-white mb-4">Ingin Mendukung Dakwah Kami?</h3>
+                <p class="text-emerald-100 mb-6 text-sm">Salurkan infaq terbaik anda untuk operasional Majelis dan kegiatan sosial.</p>
+                
+                <div class="flex items-center justify-center space-x-2 bg-white rounded-lg py-3 px-4 shadow-inner">
+                    <span id="rekening-number" class="font-mono text-emerald-900 font-bold text-lg">Bank 1234567890</span>
+                    <button onclick="copyToClipboard()" class="text-xs bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded hover:bg-emerald-200 font-bold transition-colors">
+                        Salin
+                    </button>
+                </div>
+                <p class="text-xs text-emerald-400/80 mt-3 font-medium">a.n Yayasan Nahjul Istiqomah</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-gradient-to-b from-emerald-950 to-black text-emerald-200 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center flex flex-col items-center">
+                    <div class="flex items-center justify-center space-x-2 mb-6">
+                        <img src="favicon.png" alt="Logo" class="w-10 h-10 object-contain drop-shadow-md">
+                        <span class="font-bold text-xl text-white tracking-wide">NAHJUL ISTIQOMAH</span>
+                    </div>
+                    <p class="text-emerald-400 mb-8 max-w-sm leading-relaxed mx-auto">
+                        Membangun peradaban dengan ilmu dan adab. Mari bersama-sama meraih ridho Allah SWT melalui jalan istiqomah.
+                    </p>
+                </div>
+
+                <div class="text-center">
+                    <h4 class="text-white font-bold text-lg mb-6 relative inline-block pb-2">
+                        Sosial Media
+                        <span class="absolute bottom-0 left-0 right-0 mx-auto w-1/2 h-1 bg-amber-500 rounded-full"></span>
+                    </h4>
+                    <div class="flex space-x-4 justify-center">
+                        <a href="#" class="w-10 h-10 rounded-full bg-emerald-900/50 border border-emerald-800 flex items-center justify-center hover:bg-amber-500 hover:text-emerald-950 hover:border-amber-500 transition-all duration-300">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-emerald-900/50 border border-emerald-800 flex items-center justify-center hover:bg-amber-500 hover:text-emerald-950 hover:border-amber-500 transition-all duration-300">
+                            <i data-lucide="facebook" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-emerald-900/50 border border-emerald-800 flex items-center justify-center hover:bg-amber-500 hover:text-emerald-950 hover:border-amber-500 transition-all duration-300">
+                            <i data-lucide="youtube" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <h4 class="text-white font-bold text-lg mb-6 relative inline-block pb-2">
+                        Hubungi Kami
+                        <span class="absolute bottom-0 left-0 right-0 mx-auto w-1/2 h-1 bg-amber-500 rounded-full"></span>
+                    </h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-center justify-center space-x-3">
+                            <i data-lucide="map-pin" class="flex-shrink-0 text-amber-500 w-5 h-5"></i>
+                            <span class="text-sm">Jl. Mendal, Jakarta Selatan</span>
+                        </li>
+                        <li class="flex items-center justify-center space-x-3">
+                            <i data-lucide="phone" class="flex-shrink-0 text-amber-500 w-5 h-5"></i>
+                            <span class="text-sm">+62 812-3456-7890 (Admin)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-emerald-900 mt-12 pt-8 text-center text-sm text-emerald-600/60">
+                <p>
+                    &copy; <script>document.write(new Date().getFullYear())</script> Majelis Nahjul Istiqomah
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom Modal Notification -->
+    <div id="custom-modal" class="fixed inset-0 z-[60] bg-black/50 hidden items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-200 opacity-0">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full transform transition-all duration-200 scale-95 p-6 text-center" id="modal-content">
+            <div id="modal-icon" class="mx-auto w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mb-4 text-emerald-600"></div>
+            <h3 id="modal-title" class="text-lg font-bold text-slate-900 mb-2"></h3>
+            <p id="modal-message" class="text-slate-600 mb-6 text-sm leading-relaxed"></p>
+            <div id="modal-actions" class="flex gap-3 justify-center"></div>
+        </div>
+    </div>
+
+    <!-- External JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

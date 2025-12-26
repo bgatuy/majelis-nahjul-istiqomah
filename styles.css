@@ -1,0 +1,33 @@
+/* d:\nahjul istiqomah\styles.css */
+
+/* Base Styles */
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+h1, h2, h3, .font-serif {
+    font-family: 'Playfair Display', serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+    background: #065f46;
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #047857;
+}
+
+/* Glass Navigation Effect */
+.glass-nav {
+    background: rgba(6, 78, 59, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}

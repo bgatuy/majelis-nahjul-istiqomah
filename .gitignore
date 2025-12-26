@@ -1,0 +1,18 @@
+# File Sistem Operasi (Windows/Mac)
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Log files
+*.log
+
+# Konfigurasi Editor (VS Code, JetBrains, dll)
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Dependencies (Jika nanti menggunakan Node.js/NPM)
+node_modules/
+
+# Environment Variables (Untuk keamanan data rahasia)
+.env

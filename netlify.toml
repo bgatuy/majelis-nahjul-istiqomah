@@ -1,0 +1,6 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Opsional: Mencegah error 404 jika user refresh di halaman tertentu (untuk SPA), 
+# tapi karena ini Multi-Page App, setting di atas sudah cukup.

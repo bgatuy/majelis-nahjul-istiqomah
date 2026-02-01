@@ -370,8 +370,9 @@ window.switchTab = function(tabName) {
 }
 
 window.logout = async function() {
-    await supabase.auth.signOut();
-    // Redirect akan ditangani oleh onAuthStateChange
+    // Lakukan logout hanya untuk sesi lokal (perangkat ini saja)
+    await supabase.auth.signOut({ scope: 'local' });
+    // Redirect akan ditangani oleh onAuthStateChange di bawah
 }
 
 // Listen to Auth State Changes

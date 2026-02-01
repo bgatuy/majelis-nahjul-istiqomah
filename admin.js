@@ -303,39 +303,6 @@ window.resetData = function(type) {
 
 // --- UI UTILS ---
 
-window.togglePasswordVisibility = function() {
-    const passwordInput = document.getElementById('password');
-    const eyeIcon = document.getElementById('eye-icon');
-    
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        eyeIcon.setAttribute('data-lucide', 'eye-off');
-    } else {
-        passwordInput.type = 'password';
-        eyeIcon.setAttribute('data-lucide', 'eye');
-    }
-    lucide.createIcons();
-}
-
-window.handleLogin = async function(e) {
-    e.preventDefault();
-    const email = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const errorMsg = document.getElementById('error-msg');
-    
-    errorMsg.classList.add('hidden');
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
-    });
-
-    if (error) {
-        errorMsg.classList.remove('hidden');
-        errorMsg.textContent = 'Login Gagal: ' + error.message;
-    }
-}
-
 window.switchTab = function(tabName) {
     // Simpan posisi tab terakhir ke LocalStorage
     localStorage.setItem('activeTab', tabName);
@@ -380,13 +347,13 @@ window.switchTab = function(tabName) {
 
 window.logout = async function() {
     await supabase.auth.signOut();
-    // UI update handled by onAuthStateChange
+    // Redirect akan ditangani oleh onAuthStateChange
 }
 
 // Listen to Auth State Changes
 supabase.auth.onAuthStateChange((event, session) => {
     if (session) {
-        document.getElementById('login-overlay').classList.add('hidden');
+        // Pengguna sudah login, tampilkan dashboard
         document.getElementById('dashboard-container').classList.remove('hidden');
         document.getElementById('dashboard-container').classList.add('flex');
         
@@ -394,9 +361,8 @@ supabase.auth.onAuthStateChange((event, session) => {
         const lastTab = localStorage.getItem('activeTab') || 'home';
         switchTab(lastTab);
     } else {
-        document.getElementById('login-overlay').classList.remove('hidden');
-        document.getElementById('dashboard-container').classList.add('hidden');
-        document.getElementById('dashboard-container').classList.remove('flex');
+        // Pengguna belum login, alihkan ke halaman login
+        window.location.replace('./login.html');
     }
 });
 

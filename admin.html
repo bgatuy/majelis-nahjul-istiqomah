@@ -73,7 +73,7 @@
 <!-- MOBILE HEADER -->
 <div class="md:hidden bg-emerald-950 p-4 shadow-sm flex items-center justify-between shrink-0 z-20">
     <div class="flex items-center gap-3">
-        <img src="favicon.png" class="w-8 h-8 object-contain">
+        <img src="favicon.png" class="w-10 h-10 object-contain">
         <span class="font-bold text-white text-lg">Admin Panel</span>
     </div>
     <button onclick="logout()" class="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
@@ -82,7 +82,7 @@
 </div>
 
 <!-- HOME -->
-<div id="content-home" class="tab-content p-4 md:p-8 pb-24 md:pb-8 overflow-y-auto flex-1min-h-0">
+<div id="content-home" class="tab-content p-4 md:p-8 pb-24 md:pb-8 overflow-y-auto flex-1 min-h-0">
     <div class="max-w-3xl mx-auto">
         <div class="bg-white rounded-2xl p-6 shadow-sm border">
 
@@ -101,27 +101,67 @@
 </div>
 
 <!-- JADWAL -->
-<div id="content-jadwal" class="tab-content hidden flex-col p-4 md:p-6 pb-24 md:pb-6 overflow-y-auto flex-1min-h-0">
+<div id="content-jadwal" class="tab-content hidden flex-col p-4 md:p-6 pb-24 md:pb-6 overflow-y-auto flex-1 min-h-0">
 
-<h2 class="text-xl md:text-2xl font-bold mb-4">Kelola Jadwal</h2>
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-emerald-950">Kelola Jadwal</h2>
+        <button onclick="resetData('schedule')" class="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors text-sm font-bold border border-red-200 shadow-sm hover:shadow-md" title="Hapus Semua Jadwal">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+            <span class="hidden md:inline">Reset Jadwal</span>
+        </button>
+    </div>
 
-<div class="bg-white p-4 md:p-6 rounded-xl shadow border mb-6">
-<form onsubmit="saveSchedule(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Form (Left/Top) -->
+        <div class="lg:col-span-1">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 sticky top-6">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i data-lucide="calendar-plus" class="w-5 h-5 text-emerald-600"></i>
+                    Tambah Jadwal Baru
+                </h3>
+                <form onsubmit="saveSchedule(event)" class="space-y-4">
+                    <div>
+                        <label for="sched-title" class="text-sm font-medium text-slate-600">Judul Kajian</label>
+                        <input id="sched-title" class="mt-1 p-3 border rounded-lg w-full focus:ring-2 focus:ring-emerald-500 outline-none transition" required>
+                    </div>
+                    <div>
+                        <label for="sched-speaker" class="text-sm font-medium text-slate-600">Penceramah</label>
+                        <input id="sched-speaker" class="mt-1 p-3 border rounded-lg w-full focus:ring-2 focus:ring-emerald-500 outline-none transition" required>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="sched-date" class="text-sm font-medium text-slate-600">Tanggal</label>
+                            <input type="date" id="sched-date" class="mt-1 p-3 border rounded-lg w-full focus:ring-2 focus:ring-emerald-500 outline-none transition" required>
+                        </div>
+                        <div>
+                            <label for="sched-time" class="text-sm font-medium text-slate-600">Waktu</label>
+                            <input id="sched-time" type="time" placeholder="cth: 20:00 WIB" class="mt-1 p-3 border rounded-lg w-full focus:ring-2 focus:ring-emerald-500 outline-none transition" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="sched-loc" class="text-sm font-medium text-slate-600">Lokasi</label>
+                        <input id="sched-loc" class="mt-1 p-3 border rounded-lg w-full focus:ring-2 focus:ring-emerald-500 outline-none transition" required>
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95">
+                        <span>Tambahkan Jadwal</span>
+                    </button>
+                </form>
+            </div>
+        </div>
 
-<input id="sched-title" placeholder="Judul" class="p-3 border rounded-lg w-full">
-<input id="sched-speaker" placeholder="Penceramah" class="p-3 border rounded-lg w-full">
-<input type="date" id="sched-date" class="p-3 border rounded-lg w-full">
-<input id="sched-time" placeholder="Waktu" class="p-3 border rounded-lg w-full">
-<input id="sched-loc" placeholder="Lokasi" class="p-3 border rounded-lg w-full">
-
-<button class="bg-emerald-600 text-white py-3 rounded-lg md:col-span-2">
-Simpan Jadwal
-</button>
-
-</form>
-</div>
-
-<div id="admin-schedule-list" class="grid gap-4"></div>
+        <!-- Schedule List (Right/Bottom) -->
+        <div class="lg:col-span-2">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 min-h-[300px]">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-slate-800">Daftar Jadwal</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-full font-medium" id="schedule-count">0 Jadwal</span>
+                </div>
+                <div id="admin-schedule-list" class="space-y-3">
+                    <!-- Items will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- GALERI -->
@@ -160,7 +200,7 @@ Simpan Jadwal
                     </div>
 
                     <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95">
-                        <span>Tambahkan ke Galeri</span>
+                        <span>Tambahkan Foto</span>
                     </button>
                 </form>
             </div>

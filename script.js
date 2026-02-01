@@ -128,7 +128,7 @@ async function fetchSchedules() {
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all">
                 <div class="flex items-start justify-between mb-4">
                     <div class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Kajian Rutin</div>
-                    <span class="text-slate-400 text-sm flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${item.time}</span>
+                    <span class="text-slate-600 text-sm flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${item.time}</span>
                 </div>
                 <h3 class="text-xl font-bold text-slate-800 mb-2">${item.title}</h3>
                 <div class="space-y-2 text-slate-600 mb-4">

@@ -12,6 +12,7 @@ lucide.createIcons();
 // Load Jadwal dari Supabase
 async function loadSchedules() {
     const container = document.getElementById('admin-schedule-list');
+    const countBadge = document.getElementById('schedule-count');
     container.innerHTML = '<p class="text-center text-slate-500">Memuat data...</p>';
 
     const { data, error } = await supabase
@@ -25,28 +26,39 @@ async function loadSchedules() {
     }
 
     container.innerHTML = '';
+    if (countBadge) countBadge.textContent = `${data.length} Jadwal`;
+
     if (data.length === 0) {
-        container.innerHTML = '<p class="text-slate-500">Belum ada jadwal.</p>';
+        container.innerHTML = '<p class="text-slate-500 text-center py-8">Belum ada jadwal.</p>';
         return;
     }
 
     data.forEach(item => {
         const dateStr = new Date(item.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        const timeFormatted = item.time ? item.time.substring(0, 5) + ' WIB' : 'Waktu tidak ditentukan';
         const div = document.createElement('div');
-        div.className = 'bg-white p-4 rounded-lg border border-slate-200 flex justify-between items-center shadow-sm';
+        div.className = 'border border-slate-200 rounded-xl p-4 flex items-start gap-4 hover:bg-slate-50/75 transition-colors shadow-sm';
         div.innerHTML = `
-            <div class="min-w-0 flex-1 mr-4">
-                <div class="font-bold text-emerald-900 truncate">${item.title}</div>
-                <div class="text-sm text-slate-500 truncate">${dateStr} - ${item.time}</div>
-                <div class="text-xs text-slate-400 truncate">${item.speaker} | ${item.location}</div>
+            <div class="bg-emerald-100 text-emerald-700 p-3 rounded-lg mt-1">
+                <i data-lucide="calendar-check" class="w-5 h-5"></i>
             </div>
-            <button class="delete-btn text-red-500 hover:bg-red-50 p-2 rounded shrink-0" data-id="${item.id}" data-type="schedule">
-                <i data-lucide="trash-2" class="w-5 h-5"></i>
-            </button>
+            <div class="flex-1 min-w-0">
+                <p class="font-bold text-emerald-950 truncate">${item.title}</p>
+                <div class="text-sm text-slate-600 mt-1.5 space-y-1.5">
+                    <p class="flex items-center gap-2"><i data-lucide="user-circle" class="w-4 h-4 text-slate-400"></i> <span>${item.speaker}</span></p>
+                    <p class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-slate-400"></i> <span>${item.location}</span></p>
+                    <p class="flex items-center gap-2 text-slate-500"><i data-lucide="clock" class="w-4 h-4 text-slate-400"></i> <span>${dateStr} &bull; ${timeFormatted}</span></p>
+                </div>
+            </div>
+            <div>
+                <button class="delete-btn text-red-500 hover:bg-red-100 p-2 rounded" data-id="${item.id}" data-type="schedule" title="Hapus">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+            </div>
         `;
         container.appendChild(div);
     });
-    
+
     // Re-attach event listeners for delete buttons
     container.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -113,6 +125,14 @@ async function loadGallery() {
 // Simpan Jadwal
 window.saveSchedule = async function(e) {
     e.preventDefault();
+    const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnContent = submitBtn.innerHTML;
+
+    // UI Loading
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> <span>Menyimpan...</span>';
+    lucide.createIcons();
     
     const newItem = {
         title: document.getElementById('sched-title').value,
@@ -129,9 +149,13 @@ window.saveSchedule = async function(e) {
         showModal('Gagal', 'Gagal menyimpan jadwal.', 'error');
     } else {
         showModal('Berhasil', 'Jadwal berhasil disimpan!', 'success');
-        e.target.reset();
+        form.reset();
         loadSchedules();
     }
+
+    // Reset button
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalBtnContent;
 }
 
 // Helper: Kompres Gambar

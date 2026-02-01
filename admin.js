@@ -162,6 +162,11 @@ async function compressImage(file, targetSizeKB) {
                 canvas.width = width;
                 canvas.height = height;
                 const ctx = canvas.getContext('2d');
+                
+                // Isi background putih agar PNG transparan tidak jadi hitam
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, width, height);
+                
                 ctx.drawImage(img, 0, 0, width, height);
                 
                 let quality = 0.9;
@@ -185,7 +190,6 @@ async function compressImage(file, targetSizeKB) {
 window.saveGallery = async function(e) {
     e.preventDefault();
     
-    const title = document.getElementById('gal-title').value;
     const fileInput = document.getElementById('gal-file');
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalBtnContent = submitBtn.innerHTML;
@@ -213,7 +217,7 @@ window.saveGallery = async function(e) {
 
             const newItem = {
                 image_url: compressedSrc,
-                caption: title
+                caption: ''
             };
             
             const { error } = await supabase.from('gallery').insert([newItem]);
